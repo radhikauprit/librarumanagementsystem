@@ -1,70 +1,34 @@
-# librarumanagementsystem
-
 import java.util.ArrayList;
-import java.util.*;
-public class user {
+import java.util.Scanner;
+
+class User {
     private int id;
     private String name;
 
-    user(int id,String name){
-       this.id=id;
-       this.name=name;
+    public User(int id, String name){
+        this.id = id;
+        this.name = name;
     }
-    
-    int getid(){
+
+    public int getId(){
         return id;
     }
 
-    private String getname(){
+    public String getName(){
         return name;
     }
 
-    void display(){
-  System.out.println(" id "+id+" Name "+name);
+    public void display(){
+        System.out.println("ID: " + id + " | Name: " + name);
     }
-
 }
 
-class book{
-    private String title;
-    private int id;
-  private boolean isIssue=false;
-
-  book(String title ,int id){
- this.title=title;
- this.id=id;
-  }
-   
-  public String gettitle() {
-      return title;
-  }
-  public int getid(){
-    return id;
-  }
-  public boolean isIssue(){
-    return isIssue;
-  }
-
-   public void Issue(){
-    isIssue=true;
-   } 
-
-   public void returnbook(){
-      isIssue=true;
-   }
-   
-   void display(){
-    System.out.println("title of book:"+title+"id:"+id+"status:"+isIssue);
-   }
-
-}
-
-public class book {
+class Book {
     private String title;
     private int id;
     private boolean isIssued = false;
 
-    public book(String title, int id){
+    public Book(String title, int id){
         this.title = title;
         this.id = id;
     }
@@ -93,189 +57,153 @@ public class book {
         System.out.println("ID: " + id + " | Title: " + title + " | Issued: " + (isIssued ? "Yes" : "No"));
     }
 }
-import java.util.*;
-import java.util.ArrayList.*;
 
-public class library{
-ArrayList<user>users=new ArrayList<>();
-ArrayList<book>books=new ArrayList<>();
-Scanner sc=new Scanner(System.in);
+public class LibrarySystem {
+    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<Book> books = new ArrayList<>();
+    private Scanner sc = new Scanner(System.in);
 
-public void start(){
-  int choice;
- do{
-  System.out.println("--------------LIBRARY MANAGEMENT SYSTEM---------- ");
-  System.out.println("1.ADD A USER");
-    System.out.println("2.ADD BOOKS");
-System.out.println("3.VIEW ALL BOOKS");
-    System.out.println("4.VIEW ALL USER");
-    System.out.println("5.ISSUE BOOK");
-System.out.println("6.RETURN BOOK");  
-System.out.println("7.EXITING ");
-System.out.println("ENTER YOUR CHOISE (1 to 6)");
+    public void start(){
+        int choice;
+        do {
+            System.out.println("\n---- LIBRARY MANAGEMENT SYSTEM ----");
+            System.out.println("1. Add User");
+            System.out.println("2. Add Book");
+            System.out.println("3. View All Books");
+            System.out.println("4. View All Users");
+            System.out.println("5. Issue Book");
+            System.out.println("6. Return Book");
+            System.out.println("7. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine(); // consume newline
 
-choice=sc.nextInt();
+            switch (choice) {
+                case 1: addUser(); break;
+                case 2: addBook(); break;
+                case 3: viewBooks(); break;
+                case 4: viewUsers(); break;
+                case 5: issueBook(); break;
+                case 6: returnBook(); break;
+                case 7: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid choice!");
+            }
+        } while (choice != 7);
+    }
 
-switch (choice) {
-  case 1:
-    adduser();
-    break;
-    case 2:
-    addbook();
-    break;
-    case 3:
-    viewbook();
-    break;
-    case 4:
-    viewauser();
-    break;
-    case 5:
-    issuebook();
-    break;
-    case 6:
-    returnbook();
-    break;
-    case 7:
-    System.out.println("Exiting From System:");
-    break;
+    private void addUser(){
+        System.out.print("Enter User ID: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Enter Name: ");
+        String name = sc.nextLine();
 
-  default:System.out.println("Invalid Choise Enter Again");
-    break;
-}
-  }while (choice!=7);
-}
+        for (User u : users){
+            if (u.getId() == id){
+                System.out.println("User already exists.");
+                return;
+            }
+        }
 
-private void returnbook() {
-  // TODO Auto-generated method stub
-  throw new UnsupportedOperationException("Unimplemented method 'returnbook'");
-}
+        users.add(new User(id, name));
+        System.out.println("User added successfully.");
+    }
 
-private void adduser() {
-    System.out.println("\n--- Add New User ---");
+    private void addBook(){
+        System.out.print("Enter Book ID: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Enter Book Title: ");
+        String title = sc.nextLine();
 
-    System.out.print("Enter User ID (number): ");
-    int id = sc.nextInt();
-    sc.nextLine(); // consume newline
+        for (Book b : books){
+            if (b.getId() == id){
+                System.out.println("Book already exists.");
+                return;
+            }
+        }
 
-    System.out.print("Enter User Name: ");
-    String name = sc.nextLine();
+        books.add(new Book(title, id));
+        System.out.println("Book added successfully.");
+    }
 
-    // Check for duplicate ID
-    for (user u : users) {
-        if (u.getid() == id) {
-            System.out.println("A user with this ID already exists.");
+    private void viewBooks(){
+        if (books.isEmpty()) {
+            System.out.println("No books found.");
             return;
         }
+
+        System.out.println("\n--- Book List ---");
+        for (Book b : books) {
+            b.display();
+        }
     }
 
-    users.add(new user(id, name));
-    System.out.println("User added successfully!");
-}
-  private void addbook(){
-    
-    System.out.println("\n--- Add New Book ---");
-
-    System.out.print("Enter Book ID (number): ");
-    int id = sc.nextInt();
-    sc.nextLine(); // consume newline
-
-    System.out.print("Enter Book Title: ");
-    String title = sc.nextLine();
-
-    // Check for duplicate ID
-    for (book b : books) {
-        if (b.getid() == id) {
-            System.out.println("A book with this ID already exists.");
+    private void viewUsers(){
+        if (users.isEmpty()) {
+            System.out.println("No users found.");
             return;
         }
-    }
 
-    books.add(new book(title, id));
-    System.out.println("Book added successfully!");
-}
-  private void viewbook(){
-    System.out.println("-------VIEW BOOK-----");
-
-    if(books.isEmpty()){
-      System.out.println("BOOK ARE NOT PRCENT:");
-      return;
-    }
-    for(book b:books){
-      b.display();
-    }
-
-  }
-
-  private void viewauser(){
-    System.out.println("-----------VIEW USER OF BOOK------------");
-
-    if(users.isEmpty()){
- System.out.println("USER ARE NOT PRESENT");
-    }
-    for(user u:users){
-      u.display();
-    }
-  }
-
-  private void issuebook(){
-    System.out.println("------------ISSUE BOOK---------");
-    System.out.println("ENTER A BOOK TITLE");
-    String title=sc.nextLine();
-
-    System.out.println("ENTER A ID");
-    int id= sc.nextInt();
-   
-    book foundbook=null;
-    for(book b:books){
-      if(b.getid()==id){
-        foundbook=b;
-        return;
-      }
-    }
-    if(foundbook==null){
-      System.out.println("it is not found:");
-      return;
-    }
-    if (foundbook.isIssue()) {
-        System.out.println("This book is already issued to someone else.");
-        return;
-    }
-
-    foundbook.Issue();
-    System.out.println("Book issued successfully.");
-  }
-  private void returnBook() {
-    System.out.println("\n--- Return a Book ---");
-
-    System.out.print("Enter Book ID to return: ");
-    int bookId = sc.nextInt();
-
-    // Find the book
-    book foundBook = null;
-    for (book b : books) {
-        if (b.getid() == bookId) {
-            foundBook = b;
-            break;
+        System.out.println("\n--- User List ---");
+        for (User u : users) {
+            u.display();
         }
     }
 
-    if (foundBook == null) {
-        System.out.println("Book not found.");
-        return;
+    private void issueBook(){
+        System.out.print("Enter Book ID to issue: ");
+        int bookId = sc.nextInt();
+
+        Book foundBook = null;
+        for (Book b : books){
+            if (b.getId() == bookId){
+                foundBook = b;
+                break;
+            }
+        }
+
+        if (foundBook == null){
+            System.out.println("Book not found.");
+            return;
+        }
+
+        if (foundBook.isIssued()){
+            System.out.println("Book is already issued.");
+            return;
+        }
+
+        foundBook.issue();
+        System.out.println("Book issued successfully.");
     }
 
-    if (!foundBook.isIssue()) {
-        System.out.println("This book is not currently issued.");
-        return;
+    private void returnBook(){
+        System.out.print("Enter Book ID to return: ");
+        int bookId = sc.nextInt();
+
+        Book foundBook = null;
+        for (Book b : books){
+            if (b.getId() == bookId){
+                foundBook = b;
+                break;
+            }
+        }
+
+        if (foundBook == null){
+            System.out.println("Book not found.");
+            return;
+        }
+
+        if (!foundBook.isIssued()){
+            System.out.println("Book was not issued.");
+            return;
+        }
+
+        foundBook.returnBook();
+        System.out.println("Book returned successfully.");
     }
 
-    foundBook.returnbook();
-    System.out.println("Book returned successfully.");
-}
- public static void main(String[] args){
+    public static void main(String[] args){
         new LibrarySystem().start();
     }
 }
-
-
-
